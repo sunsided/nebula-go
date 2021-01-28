@@ -4,6 +4,17 @@ This project uses the Nebula Go driver to interface with Nebula Graph 1.0.
 
 The client example is adjusted from [here](https://github.com/vesoft-inc/nebula-go/blob/master/example/graph_client_example.go).
 
+## Local Setup
+
+To start Nebula, run
+
+```bash
+docker-compose up
+```
+
+Note that this setup uses Docker network `172.29.0.0/16`.
+If that doesn't fit, changes to [docker-compose.yml](docker-compose.yml) are required.
+
 ## Nebula Graph
 
 The Nebula Graph database consists of four components:
@@ -16,7 +27,6 @@ The Nebula Graph database consists of four components:
 ![Nebula Architecture](.readme/nebula-architecture.jpg)
 
 The [docker-compose.yml](docker-compose.yml) setup is taken from
-[here](https://github.com/vesoft-inc/nebula-docker-compose/tree/v1.0); take
-care not to accidentally use the experimental 2.0 branch. 
+[here](https://github.com/vesoft-inc/nebula-docker-compose/tree/v1.0). 
 All three services described above are started with three replicas each,
 however the image version was changed from `nightly` to a fixed tag.
