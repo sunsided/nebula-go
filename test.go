@@ -51,6 +51,8 @@ func main() {
 				fmt.Printf("%s, ErrorCode: %v, ErrorMsg: %s", prefix, res.GetErrorCode(), res.GetErrorMsg())
 			}
 		}
+
+		fmt.Print("Creating the schema ...\n")
 		{
 			createSchema := "CREATE SPACE IF NOT EXISTS test; " +
 				"USE test;" +
@@ -65,7 +67,11 @@ func main() {
 			}
 			checkResultSet(createSchema, resultSet)
 		}
+
+		fmt.Print("... sleeping ...\n")
 		time.Sleep(5 * time.Second)
+
+		fmt.Print("Inserting some vertices ...")
 		{
 			insertVertexes := "INSERT VERTEX person(name, age) VALUES " +
 				"'Bob':('Bob', 10), " +
@@ -83,6 +89,7 @@ func main() {
 			checkResultSet(insertVertexes, resultSet)
 		}
 
+		fmt.Print("Inserting some edges ...\n")
 		{
 			// Insert multiple edges
 			insertEdges := "INSERT EDGE like(likeness) VALUES " +
@@ -100,6 +107,7 @@ func main() {
 			checkResultSet(insertEdges, resultSet)
 		}
 
+		fmt.Print("Walking the graph ...\n")
 		{
 			query := "GO FROM 'Bob' OVER like YIELD $^.person.name, $^.person.age, like.likeness"
 			// Send query
