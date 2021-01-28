@@ -150,8 +150,19 @@ curl: (7) Failed connect to storaged0:12000; Connection refused
 
 which appears to explain why the services are unhealthy (and consequently why the jobs aren't processed).
 
-Dropping an index works:
+Running `SHOW HOSTS` listed the old, IP-based host assignments as members of the cluster.
+After changing the identifications of the nodes, they assumed to be in a six-node cluster, out of
+which three nodes didn't exist. Since the original nodes held the partitions for the graph space,
+the new nodes wouldn't "own" them and thus all commands would fail.
 
-```cypher
-DROP TAG INDEX index_person
-```
+Interestingly, no operation was found to remove nodes from the cluster. Tearing down the
+entire setup and starting from scratch did the trick.
+
+### Lesson learned
+
+In order to run `MATCH (p:person) RETURN p`, we need to
+
+- `CREATE TAG INDEX person_index ON person()`
+- `REBUILD TAG INDEX person_index()`
+
+This also allows `MATCH (p:person) -[:like]-> (p2:person) RETURN p, p2`.
