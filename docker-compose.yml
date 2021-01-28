@@ -1,5 +1,9 @@
 version: '3.4'
 services:
+
+  # Nebula Graph
+  # Metadata Service
+
   metad0:
     image: vesoft/nebula-metad:v2.0.0-rc1
     environment:
@@ -101,6 +105,9 @@ services:
     restart: on-failure
     cap_add:
       - SYS_PTRACE
+
+  # Nebula Graph
+  # Storage Service
 
   storaged0:
     image: vesoft/nebula-storaged:v2.0.0-rc1
@@ -216,6 +223,9 @@ services:
     cap_add:
       - SYS_PTRACE
 
+  # Nebula Graph
+  # Query Service
+
   graphd0:
     image: vesoft/nebula-graphd:v2.0.0-rc1
     environment:
@@ -321,9 +331,61 @@ services:
     cap_add:
       - SYS_PTRACE
 
+  # Nebula Web
+
+  client:
+    image: vesoft/nebula-http-gateway:v2
+    environment:
+      USER: root
+    ports:
+      - 8080
+    networks:
+      - nebula-web
+
+  web:
+    image: vesoft/nebula-graph-studio:v2
+    environment:
+      USER: root
+      UPLOAD_DIR: ${MAPPING_DOCKER_DIR}
+    ports:
+      - 7001
+    depends_on:
+      - client
+    volumes:
+      - ${UPLOAD_DIR}:${MAPPING_DOCKER_DIR}:rw
+    networks:
+      - nebula-web
+
+  importer:
+    image: vesoft/nebula-importer:v2
+    networks:
+      - nebula-web
+    ports:
+      - 5699
+    volumes:
+      - ${UPLOAD_DIR}:${MAPPING_DOCKER_DIR}:rw
+    command:
+      - "--port=5699"
+      - "--callback=http://nginx:7001/api/import/finish"
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/nebula.conf
+      - ${UPLOAD_DIR}:${MAPPING_DOCKER_DIR}:rw
+    depends_on:
+      - client
+      - web
+      - importer
+    networks:
+      - nebula-web
+    ports:
+      - 7001:7001
+
 networks:
   nebula-net:
     ipam:
       driver: default
       config:
         - subnet: 172.29.0.0/16
+  nebula-web:
