@@ -371,12 +371,11 @@ services:
   nginx:
     image: nginx:alpine
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/nebula.conf
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/nebula.conf:ro
       - ${UPLOAD_DIR}:${MAPPING_DOCKER_DIR}:rw
     depends_on:
       - client
       - web
-      - importer
     networks:
       - nebula-web
     ports:
