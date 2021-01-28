@@ -10,16 +10,16 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:45500,172.29.1.2:45500,172.29.1.3:45500
-      - --local_ip=172.29.1.1
-      - --ws_ip=172.29.1.1
+      - --meta_server_addrs=metad0:45500,metad1:45500,metad2:45500
+      - --local_ip=metad0
+      - --ws_ip=metad0
       - --port=45500
       - --data_path=/data/meta
       - --log_dir=/logs
       - --v=0
       - --minloglevel=0
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.29.1.1:11000/status"]
+      test: ["CMD", "curl", "-f", "http://metad0:11000/status"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -44,16 +44,16 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:45500,172.29.1.2:45500,172.29.1.3:45500
-      - --local_ip=172.29.1.2
-      - --ws_ip=172.29.1.2
+      - --meta_server_addrs=metad0:45500,metad1:45500,metad2:45500
+      - --local_ip=metad1
+      - --ws_ip=metad1
       - --port=45500
       - --data_path=/data/meta
       - --log_dir=/logs
       - --v=0
       - --minloglevel=0
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.29.1.2:11000/status"]
+      test: ["CMD", "curl", "-f", "http://metad1:11000/status"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -78,16 +78,16 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:45500,172.29.1.2:45500,172.29.1.3:45500
-      - --local_ip=172.29.1.3
-      - --ws_ip=172.29.1.3
+      - --meta_server_addrs=metad0:45500,metad1:45500,metad2:45500
+      - --local_ip=metad2
+      - --ws_ip=metad2
       - --port=45500
       - --data_path=/data/meta
       - --log_dir=/logs
       - --v=0
       - --minloglevel=0
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.29.1.3:11000/status"]
+      test: ["CMD", "curl", "-f", "http://metad2:11000/status"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -115,9 +115,9 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:45500,172.29.1.2:45500,172.29.1.3:45500
-      - --local_ip=172.29.2.1
-      - --ws_ip=172.29.2.1
+      - --meta_server_addrs=metad0:45500,metad1:45500,metad2:45500
+      - --local_ip=storaged0
+      - --ws_ip=storaged0
       - --port=44500
       - --data_path=/data/storage
       - --log_dir=/logs
@@ -128,7 +128,7 @@ services:
       - metad1
       - metad2
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.29.2.1:12000/status"]
+      test: ["CMD", "curl", "-f", "http://storaged0:12000/status"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -153,9 +153,9 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:45500,172.29.1.2:45500,172.29.1.3:45500
-      - --local_ip=172.29.2.2
-      - --ws_ip=172.29.2.2
+      - --meta_server_addrs=metad0:45500,metad1:45500,metad2:45500
+      - --local_ip=storaged1
+      - --ws_ip=storaged1
       - --port=44500
       - --data_path=/data/storage
       - --log_dir=/logs
@@ -166,7 +166,7 @@ services:
       - metad1
       - metad2
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.29.2.2:12000/status"]
+      test: ["CMD", "curl", "-f", "http://storaged1:12000/status"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -191,9 +191,9 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:45500,172.29.1.2:45500,172.29.1.3:45500
-      - --local_ip=172.29.2.3
-      - --ws_ip=172.29.2.3
+      - --meta_server_addrs=metad0:45500,metad1:45500,metad2:45500
+      - --local_ip=storaged2
+      - --ws_ip=storaged2
       - --port=44500
       - --data_path=/data/storage
       - --log_dir=/logs
@@ -204,7 +204,7 @@ services:
       - metad1
       - metad2
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.29.2.3:12000/status"]
+      test: ["CMD", "curl", "-f", "http://storaged2:12000/status"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -232,9 +232,9 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:45500,172.29.1.2:45500,172.29.1.3:45500
+      - --meta_server_addrs=metad0:45500,metad1:45500,metad2:45500
       - --port=3699
-      - --ws_ip=172.29.3.1
+      - --ws_ip=graphd0
       - --log_dir=/logs
       - --v=0
       - --minloglevel=0
@@ -243,7 +243,7 @@ services:
       - metad1
       - metad2
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.29.3.1:13000/status"]
+      test: ["CMD", "curl", "-f", "http://graphd0:13000/status"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -267,9 +267,9 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:45500,172.29.1.2:45500,172.29.1.3:45500
+      - --meta_server_addrs=metad0:45500,metad1:45500,metad2:45500
       - --port=3699
-      - --ws_ip=172.29.3.2
+      - --ws_ip=graphd1
       - --log_dir=/logs
       - --v=0
       - --minloglevel=0
@@ -278,7 +278,7 @@ services:
       - metad1
       - metad2
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.29.3.2:13000/status"]
+      test: ["CMD", "curl", "-f", "http://graphd1:13000/status"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -302,9 +302,9 @@ services:
       USER: root
       TZ:   "${TZ}"
     command:
-      - --meta_server_addrs=172.29.1.1:45500,172.29.1.2:45500,172.29.1.3:45500
+      - --meta_server_addrs=metad0:45500,metad1:45500,metad2:45500
       - --port=3699
-      - --ws_ip=172.29.3.3
+      - --ws_ip=graphd2
       - --log_dir=/logs
       - --v=0
       - --minloglevel=0
@@ -313,7 +313,7 @@ services:
       - metad1
       - metad2
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://172.29.3.3:13000/status"]
+      test: ["CMD", "curl", "-f", "http://graphd2:13000/status"]
       interval: 30s
       timeout: 10s
       retries: 3
