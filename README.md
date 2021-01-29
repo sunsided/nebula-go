@@ -59,6 +59,21 @@ To open the console, run
 docker run --rm -ti --network nebula-go_nebula-net vesoft/nebula-console:v2 -u user -p password --address=graphd1 --port=3699
 ```
 
+### Example queries
+
+This nGQL statement starts at _Bob_, walks all _like_ relations and returns the liked person,
+as well as the degree of likeness:
+
+```nGQL
+GO 1 STEPS FROM "Bob" OVER like YIELD $^.person.name, $$.person.name, like.likeness;
+```
+
+The same query can be written in OpenCypher like this:
+
+```cypher
+MATCH (p:person) -[l:like]-> (p2:person) WHERE id(p) == "Bob" RETURN p.name, p2.name, l.likeness
+```
+
 ## Quirks
 
 In order to use OpenCypher's `MATCH` e.g. like so ...

@@ -109,7 +109,7 @@ func main() {
 
 		fmt.Print("Walking the graph ...\n")
 		{
-			query := "GO FROM 'Bob' OVER like YIELD $^.person.name, $^.person.age, like.likeness"
+			query := "GO FROM 'Bob' OVER like YIELD $$.person.name, $$.person.age, like.likeness"
 			// Send query
 			resultSet, err := session.Execute(query)
 			if err != nil {
