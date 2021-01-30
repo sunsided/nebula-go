@@ -76,7 +76,10 @@ Make sure to select the correct Kubernetes context by either using `kubectl conf
 
 ```bash
 kubectl config use-context kind-nebula
-helm install nebula helm/ # WARNING! You'll need to add options to apply your configuration!
+
+# helm install nebula helm/ # WARNING! You'll need to add options to apply your configuration!
+helm install nebula helm/ --set=.storage.storageClass=standard --dry-run
+
 helm list
 ```
 
