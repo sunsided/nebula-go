@@ -6,7 +6,7 @@ metadata:
 data:
   nebula-graphd.conf: |
     ########## basics ##########
-    # Whether to run as a daemon process  
+    # Whether to run as a daemon process
     --daemonize=false
     # The file to host the process id
     --pid_file=pids/nebula-graphd.pid
@@ -57,7 +57,7 @@ data:
     # HTTP2 service port
     --ws_h2_port={{ .Values.port.graphd.http2Port }}
 
---- 
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -109,7 +109,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: nebula-storaged 
+  name: nebula-storaged
   namespace: {{ .Values.namespace }}
 data:
   nebula-storaged.conf: |

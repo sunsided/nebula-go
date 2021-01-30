@@ -47,30 +47,30 @@ spec:
           name: http
         - containerPort: {{ .Values.port.metad.http2Port }}
           name: http2
-        command: 
+        command:
           - "/bin/bash"
           - "-ecx"
           - "exec /usr/local/nebula/bin/nebula-metad --flagfile=/usr/local/nebula/etc/nebula-metad.conf --local_ip=$(hostname -i) --v=0 --minloglevel=2 --daemonize=false"
-        {{- if .Values.livenessProbe.graphd.Enable }}   
+        {{- if .Values.livenessProbe.graphd.Enable }}
         livenessProbe:
           httpGet:
             path: /status
             port: {{ .Values.port.metad.httpPort }}
           initialDelaySeconds: 30
-          timeoutSeconds: 5     
-        {{- end }}     
+          timeoutSeconds: 5
+        {{- end }}
         volumeMounts:
-        - name: config 
+        - name: config
           mountPath: /usr/local/nebula/etc/
         - name: data
           mountPath: /usr/local/nebula/data
         - name: timezone
           mountPath: /etc/localtime
         - name: log
-          mountPath: /usr/local/nebula/logs 
+          mountPath: /usr/local/nebula/logs
       volumes:
-      - name: config 
-        configMap: 
+      - name: config
+        configMap:
           name: nebula-metad
       - name: timezone
         hostPath:
@@ -95,6 +95,7 @@ spec:
           storage: {{ .Values.storage.metad.size }}
 
 ---
+
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -141,31 +142,31 @@ spec:
         - containerPort: {{ .Values.port.storaged.httpPort }}
           name: http
         - containerPort: {{ .Values.port.storaged.http2Port }}
-          name: http2     
-        command: 
+          name: http2
+        command:
           - "/bin/bash"
           - "-ecx"
-          - "exec /usr/local/nebula/bin/nebula-storaged --flagfile=/usr/local/nebula/etc/nebula-storaged.conf --local_ip=$(hostname -i) --v=0 --minloglevel=2 --daemonize=false"    
+          - "exec /usr/local/nebula/bin/nebula-storaged --flagfile=/usr/local/nebula/etc/nebula-storaged.conf --local_ip=$(hostname -i) --v=0 --minloglevel=2 --daemonize=false"
         {{- if .Values.livenessProbe.graphd.Enable }}
         livenessProbe:
           httpGet:
             path: /status
             port: {{ .Values.port.storaged.httpPort }}
           initialDelaySeconds: 30
-          timeoutSeconds: 5     
-        {{- end}}     
+          timeoutSeconds: 5
+        {{- end}}
         volumeMounts:
         - name: config
           mountPath: /usr/local/nebula/etc/
         - name: data
           mountPath: /usr/local/nebula/data
-        - name: timezone 
+        - name: timezone
           mountPath: /etc/localtime
         - name: log
-          mountPath: /usr/local/nebula/logs 
+          mountPath: /usr/local/nebula/logs
       volumes:
       - name: config
-        configMap: 
+        configMap:
           name: nebula-storaged
       - name: timezone
         hostPath:
@@ -173,8 +174,8 @@ spec:
       - name: data
         persistentVolumeClaim:
           claimName: data
-      - name: log 
-        hostPath: 
+      - name: log
+        hostPath:
           path: /var/log
   podManagementPolicy: Parallel
   updateStrategy:

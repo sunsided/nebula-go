@@ -1,5 +1,5 @@
 # specify kubernetes namespace
-namespace: default 
+namespace: default
 
 # the nebula images
 image:
@@ -9,27 +9,27 @@ image:
     tag: nightly
     pullPolicy: Always
   # the nebula-metad images,change tag to use a different version.
-  metad: 
+  metad:
     repository: vesoft/nebula-metad
-    tag: nightly 
+    tag: nightly
     pullPolicy: Always
   # the nebula storaged images,change tag to use a different version.
   storaged:
     repository: vesoft/nebula-storaged
     tag: nightly
-    pullPolicy: Always 
+    pullPolicy: Always
 
 # set livenessProbe, kubelet will check nebula pod alive
 livenessProbe:
   graphd:
     Enable: true
   metad:
-    Enable: true 
+    Enable: true
   storaged:
-    Enable: true 
+    Enable: true
 
 ## Optional resource requests and limits for the nebula container
-resources: 
+resources:
   graphd:
     limits:
       cpu: 1000m
@@ -45,7 +45,7 @@ resources:
     requests:
       cpu: 1000m
       memory: 1024Mi
-  
+
   storaged:
     limits:
       cpu: 1000m
@@ -59,31 +59,31 @@ replication:
   storaged:
     replicas: 3
   ## Number of nebula-metad replicas
-  metad: 
+  metad:
     replicas: 3
   ## Number of nebula-graphd replicas
-  graphd: 
+  graphd:
     replicas: 3
 
 port:
-  ## Service And Container Port Setting of Nebula-Graphd  
+  ## Service And Container Port Setting of Nebula-Graphd
   graphd:
-    serviceType: ClusterIP 
+    serviceType: ClusterIP
     thriftPort: 3699
-    httpPort: 13000 
-    http2Port: 13002 
-  ## Service And Container Port Setting of Nebula-Storaged  
+    httpPort: 13000
+    http2Port: 13002
+  ## Service And Container Port Setting of Nebula-Storaged
   storaged:
-    serviceType: ClusterIP 
-    thriftPort: 45600 
-    raftPort: 45601 
+    serviceType: ClusterIP
+    thriftPort: 45600
+    raftPort: 45601
     httpPort: 12000
-    http2Port: 12002 
-  ## Service And Container Port Setting of Nebula-Metad  
+    http2Port: 12002
+  ## Service And Container Port Setting of Nebula-Metad
   metad:
-    serviceType: ClusterIP 
-    thriftPort: 44500 
-    raftPort: 44501 
+    serviceType: ClusterIP
+    thriftPort: 44500
+    raftPort: 44501
     httpPort: 11000
     http2Port: 11002
 
@@ -96,11 +96,11 @@ MetadHosts:
 storage:
   storageClass: fast-disks
   storaged:
-    size: 20Gi 
+    size: 20Gi
   metad:
-    size: 20Gi 
+    size: 20Gi
 
-nodeSelector: 
+nodeSelector:
   nebula: "yes"
 
 tolerations: []

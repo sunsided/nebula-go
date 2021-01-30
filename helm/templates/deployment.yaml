@@ -14,7 +14,7 @@ spec:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 1
-    type: RollingUpdate  
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -46,8 +46,8 @@ spec:
           containerPort: {{ .Values.port.graphd.httpPort }}
         - name: http2
           containerPort: {{ .Values.port.graphd.http2Port }}
-        command: ["/usr/local/nebula/bin/nebula-graphd", "--flagfile=/usr/local/nebula/etc/nebula-graphd.conf", "--v=0", "--minloglevel=2", "--daemonize=false"]     
-        {{- if .Values.livenessProbe.graphd.Enable }}   
+        command: ["/usr/local/nebula/bin/nebula-graphd", "--flagfile=/usr/local/nebula/etc/nebula-graphd.conf", "--v=0", "--minloglevel=2", "--daemonize=false"]
+        {{- if .Values.livenessProbe.graphd.Enable }}
         livenessProbe:
           httpGet:
             path: /status
@@ -56,24 +56,22 @@ spec:
           timeoutSeconds: 5
         {{- end }}
         resources:
-          #TODO: Change these to appropriate values for the hardware that you're running.        
+          #TODO: Change these to appropriate values for the hardware that you're running.
           requests:
             cpu: "{{ .Values.resources.graphd.requests.cpu }}"
-            memory: "{{ .Values.resources.graphd.requests.memory }}"        
+            memory: "{{ .Values.resources.graphd.requests.memory }}"
           limits:
-            cpu: "{{ .Values.resources.graphd.limits.cpu }}" 
+            cpu: "{{ .Values.resources.graphd.limits.cpu }}"
             memory: "{{ .Values.resources.graphd.limits.memory }}"
         volumeMounts:
-        - name: config 
+        - name: config
           mountPath: /usr/local/nebula/etc/
-        - name: timezone 
+        - name: timezone
           mountPath: /etc/localtime
       volumes:
       - name: timezone
         hostPath:
           path: /etc/localtime
-      - name: config 
-        configMap: 
+      - name: config
+        configMap:
           name: nebula-graphd
-
-        

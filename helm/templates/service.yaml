@@ -29,7 +29,7 @@ metadata:
   name: nebula-storaged
   namespace: {{ .Values.namespace }}
   annotations:
-    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"  
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
 spec:
   publishNotReadyAddresses: true
   ports:
