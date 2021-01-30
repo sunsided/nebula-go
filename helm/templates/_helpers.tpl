@@ -68,5 +68,9 @@ Create the name of the service account to use
 {{- end -}}
 
 {{- define "metad.endpoints" -}}
-{{- join "," .Values.MetadHosts -}}
+{{- $nodeCount := .Values.replication.metad.replicas | int }}
+  {{- range $index0 := until $nodeCount -}}
+      {{- $index1 := $index0 | add1 -}}
+{{ $.Release.Name }}-metad-{{ $index0 }}.{{ default $.Release.Namespace $.Values.namespace }}{{ if ne $index1 $nodeCount }},{{ end }}
+  {{- end -}}
 {{- end -}}

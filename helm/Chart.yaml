@@ -5,7 +5,7 @@ description: A distributed, fast open-source graph database
     https://nebula-graph.io
 type: application
 version: 0.1
-appVersion: 1.0.0-rc2
+appVersion: 2.0.0-rc1
 keywords:
 - graph-database
 - distributed

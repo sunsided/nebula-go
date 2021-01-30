@@ -66,4 +66,18 @@ Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/qui
 
 ```bash
 kubectl cluster-info --context kind-nebula
+kubectl config use-context kind-nebula
 ```
+
+### Installing the Helm chart
+
+Make sure to select the correct Kubernetes context by either using `kubectl config use-context kind-nebula` or by specifying the `--kube-context=kind-nebula` to Helm.
+
+
+```bash
+kubectl config use-context kind-nebula
+helm install nebula helm/ # WARNING! You'll need to add options to apply your configuration!
+helm list
+```
+
+This will spin up the appropriate pods using the default configuration
