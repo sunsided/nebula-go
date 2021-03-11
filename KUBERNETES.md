@@ -11,7 +11,7 @@ The Helm chart is taken from the official repository [vesoft-inc/nebula/kubernet
 The following list is software and hardware requirements involved in the deployment in the post
 linked above:
 
-- The operation system is CentOS-7.6.1810 x86_64.
+- The operating system is CentOS-7.6.1810 x86_64.
 - Virtual machine configuration:
   - 4 CPU
   - 8G memory
@@ -41,10 +41,10 @@ Install kind as described [here](https://kind.sigs.k8s.io/docs/user/quick-start/
 a new Kubernetes cluster called `nebula` like so:
 
 ```
-kind create cluster --name nebula
+kind create cluster --name nebula --config=kind/config.yaml
 ```
 
-You should be presesnted with output similar to the following:
+You should be presented with output similar to the following:
 
 ```
 Creating cluster "nebula" ...
@@ -78,7 +78,7 @@ Make sure to select the correct Kubernetes context by either using `kubectl conf
 kubectl config use-context kind-nebula
 
 # helm install nebula helm/ # WARNING! You'll need to add options to apply your configuration!
-helm install nebula helm/ --set=.storage.storageClass=standard --dry-run
+helm install nebula helm/ --set=storage.storageClass=standard --set=nodeSelector=null --dry-run
 
 helm list
 ```
