@@ -1,12 +1,11 @@
 apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
-  name: nebula-budget
+  name: nebula-metad
   labels:
-    app: nebula-budget
+    app: nebula-metad
 spec:
   selector:
     matchLabels:
-      app: nebula-storaged
       app: nebula-metad
   maxUnavailable: 1
