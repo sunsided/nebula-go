@@ -87,11 +87,6 @@ port:
     httpPort: 11000
     http2Port: 11002
 
-MetadHosts:
-  - 192.168.8.21:44500 # TODO: These need to be resolved from the StatefulSet!
-  - 192.168.8.22:44500 # TODO: These need to be resolved from the StatefulSet!
-  - 192.168.8.23:44500 # TODO: These need to be resolved from the StatefulSet!
-
 ## Storage Setting of Nebula-Metad and Nebula-Storaged
 storage:
   storageClass: ssd

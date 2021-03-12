@@ -65,3 +65,31 @@ spec:
     port: {{ .Values.port.graphd.http2Port }}
   selector:
     app: nebula-graphd
+---
+{{- $root := . -}}
+{{ range $index := until (atoi (quote .Values.replication.metad.replicas) | default 3) }}
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nebula-metad-{{ $index }}
+  name: nebula-metad-{{ $index }}
+  namespace: {{ $root.Values.namespace }}
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+spec:
+  publishNotReadyAddresses: true
+  type: NodePort
+  ports:
+    - name: thrift
+      port: {{ $root.Values.port.metad.thriftPort }}
+    - name: raft
+      port: {{ $root.Values.port.metad.raftPort }}
+    - name: http
+      port: {{ $root.Values.port.metad.httpPort }}
+    - name: http2
+      port: {{ $root.Values.port.metad.http2Port }}
+  selector:
+    statefulset.kubernetes.io/pod-name: nebula-metad-{{ $index }}
+---
+{{ end }}

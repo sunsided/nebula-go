@@ -23,7 +23,7 @@ spec:
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
 {{- end }}
-      hostNetwork: true
+      # hostNetwork: true
       containers:
       - name: nebula-metad
         image: "{{ .Values.image.metad.repository }}:{{ .Values.image.metad.tag }}"
@@ -50,7 +50,7 @@ spec:
         command:
           - "/bin/bash"
           - "-ecx"
-          - "exec /usr/local/nebula/bin/nebula-metad --flagfile=/usr/local/nebula/etc/nebula-metad.conf --local_ip=$(hostname -i) --v=0 --minloglevel=2 --daemonize=false"
+          - "exec /usr/local/nebula/bin/nebula-metad --flagfile=/usr/local/nebula/etc/nebula-metad.conf --local_ip=$(hostname) --v=0 --minloglevel=2 --daemonize=false"
         {{- if .Values.livenessProbe.graphd.Enable }}
         livenessProbe:
           httpGet:
@@ -119,7 +119,7 @@ spec:
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
 {{- end }}
-      hostNetwork: true
+      # hostNetwork: true
       containers:
       - name: nebula-storaged
         image: "{{ .Values.image.storaged.repository }}:{{ .Values.image.storaged.tag }}"
