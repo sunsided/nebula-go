@@ -194,7 +194,7 @@ data:
         proxy_pass http://nebula-http-gateway.{{ .Values.namespace }}.svc.cluster.local:{{ .Values.port.httpgateway.httpPort }}/api/$1;
       }
 
-      #location ~ ^/api-import/([A-Za-z0-9\/]+) {
-      #  proxy_pass http://importer:5699/$1;
-      #}
+      location ~ ^/api-import/([A-Za-z0-9\/]+) {
+        proxy_pass http://nebula-graph-importer.{{ .Values.namespace }}.svc.cluster.local:{{ .Values.port.importer.tcpPort }}/$1;
+      }
     }

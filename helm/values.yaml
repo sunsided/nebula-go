@@ -19,8 +19,15 @@ image:
     tag: v2.0.0-rc1
     pullPolicy: Always
   # the nebula graph-studio images, change tag to use a different version.
+  # https://github.com/vesoft-inc/nebula-web-docker
   graphstudio:
     repository: vesoft/nebula-graph-studio
+    tag: v2
+    pullPolicy: Always
+  # the nebula graph importer images, change tag to use a different version.
+  # https://github.com/vesoft-inc/nebula-importer
+  importer:
+    repository: vesoft/nebula-importer
     tag: v2
     pullPolicy: Always
   # the nebula http-gateway images, change tag to use a different version.
@@ -99,6 +106,14 @@ resources:
       cpu: 1000m
       memory: 512Mi
 
+  importer:
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+    requests:
+      cpu: 1000m
+      memory: 512Mi
+
 replication:
   ## Number of nebula-storaged replicas
   storaged:
@@ -117,6 +132,9 @@ replication:
     replicas: 1
   ## Number of http-gateway replicas for nebula-graph-studio
   httpgateway:
+    replicas: 1
+  ## Number of graph-importer replicas for nebula-graph-studio
+  importer:
     replicas: 1
 
 port:
@@ -152,6 +170,10 @@ port:
   httpgateway:
     serviceType: ClusterIP
     httpPort: 8080
+  ## Service And Container Port Setting of Nebula's Graph-Importer
+  importer:
+    serviceType: ClusterIP
+    tcpPort: 5699
 
 ## Storage Setting of Nebula-Metad and Nebula-Storaged
 storage:

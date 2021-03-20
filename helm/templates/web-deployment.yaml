@@ -161,3 +161,52 @@ spec:
         - name: config
           configMap:
             name: nebula-graph-studio-nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nebula-graph-importer
+  name: nebula-graph-importer
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: nebula-graph-importer
+  replicas: {{ .Values.replication.importer.replicas }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: nebula-graph-importer
+    spec:
+      restartPolicy: Always
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+      {{ toYaml .Values.nodeSelector | indent 8 }}
+      {{- end }}
+      containers:
+      - name: nebula-graphd
+        image: "{{ .Values.image.importer.repository }}:{{ .Values.image.importer.tag }}"
+        imagePullPolicy: {{ .Values.image.importer.pullPolicy }}
+        env:
+          - name: USER
+            value: root
+        command:
+          - "/bin/sh"
+          - "-ecx"
+          - "exec /usr/local/bin/nebula-importer --port={{ .Values.port.importer.tcpPort }} --callback=http://nebula-nginx.{{ .Values.namespace }}.svc.cluster.local:{{ .Values.port.nginx.httpPort }}/api/import/finish "
+        resources:
+          requests:
+            cpu: {{ .Values.resources.importer.requests.cpu | quote }}
+            memory: {{ .Values.resources.importer.requests.memory | quote }}
+          limits:
+            cpu: {{ .Values.resources.importer.limits.cpu | quote }}
+            memory: {{ .Values.resources.importer.limits.memory | quote }}
+        ports:
+          - name: tcp
+            containerPort: {{ .Values.port.importer.tcpPort }}

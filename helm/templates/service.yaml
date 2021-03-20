@@ -134,3 +134,19 @@ spec:
   selector:
     app: nebula-http-gateway
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nebula-graph-importer
+  name: nebula-graph-importer
+  namespace: {{ .Values.namespace }}
+spec:
+  publishNotReadyAddresses: true
+  type: NodePort
+  ports:
+    - name: tcp
+      port: {{ .Values.port.importer.tcpPort }}
+  selector:
+    app: nebula-graph-importer
+---
