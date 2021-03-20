@@ -55,14 +55,6 @@ spec:
           initialDelaySeconds: 30
           timeoutSeconds: 5
         {{- end }}
-        resources:
-          #TODO: Change these to appropriate values for the hardware that you're running.
-          requests:
-            cpu: "{{ .Values.resources.graphd.requests.cpu }}"
-            memory: "{{ .Values.resources.graphd.requests.memory }}"
-          limits:
-            cpu: "{{ .Values.resources.graphd.limits.cpu }}"
-            memory: "{{ .Values.resources.graphd.limits.memory }}"
         volumeMounts:
         - name: config
           mountPath: /usr/local/nebula/etc/
