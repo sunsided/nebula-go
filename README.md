@@ -38,7 +38,7 @@ however the image version was changed from `nightly` to a fixed tag.
 
 ### Graph Studio
 
-After starting the services with Docker Compose, visit the following
+After starting the services with Docker Compose or Kubernetes (see [KUBERNETES.md](KUBERNETES.md)), visit the following
 address in your Browser:
 
 - [http://localhost:7001/?lang=EN_US](http://localhost:7001/?lang=EN_US)
@@ -46,8 +46,8 @@ address in your Browser:
 From there, connect to the running database using:
 
 - Host: `<your IP>:3699`
-- User: `user`
-- Password: `password`
+- User: `user` (literally)
+- Password: `password` (literally)
 
 Note that you _must_ use the IP of your host machine. Using either
 `localhost` or `127.0.0.1` will not work.
