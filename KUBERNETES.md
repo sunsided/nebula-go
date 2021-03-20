@@ -6,32 +6,17 @@ The Helm chart is taken from the official repository [vesoft-inc/nebula/kubernet
 
 ## Deploy
 
-### Software And Hardware Requirements
-
-The following list is software and hardware requirements involved in the deployment in the post
-linked above:
-
-- The operating system is CentOS-7.6.1810 x86_64.
-- Virtual machine configuration:
-  - 4 CPU
-  - 8G memory
-  - 50G system disk
-  - 50G data disk A
-  - 50G data disk B
-- Kubernetes cluster is version v1.16.
-- Use local PV as data storage.
-
 ### Cluster Topology
 
-Following is the cluster topology:
-
+The following is a hypothetical cluster topology for just running
+Nebula Graph without any UIs such as Graph Studio:
 
 | Server IP   | Nebula Services             | Role       |
 |-------------|-----------------------------|------------|
-| 192.168.0.1 |                             | k8s-master |
-| 192.168.0.2 | graphd, metad-0, storaged-0 | k8s-slave  |
-| 192.168.0.3 | graphd, metad-1, storaged-1 | k8s-slave  |
-| 192.168.0.4 | graphd, metad-2, storaged-2 | k8s-slave  |
+| x.x.x.x     |                             | k8s-master |
+| x.x.x.x     | graphd, metad-0, storaged-0 | k8s-slave  |
+| x.x.x.x     | graphd, metad-1, storaged-1 | k8s-slave  |
+| x.x.x.x     | graphd, metad-2, storaged-2 | k8s-slave  |
 
 ## Local Development using Kind
 
