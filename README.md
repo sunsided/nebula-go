@@ -1,8 +1,9 @@
 # Go feat. Nebula Graph
 
 This project uses the Nebula Go driver to interface with Nebula Graph 1.0.
-
 The client example is adjusted from [here](https://github.com/vesoft-inc/nebula-go/blob/master/example/graph_client_example.go).
+
+👉 For an example of how to run Nebula Graph in Kubernetes, see [KUBERNETES.md](KUBERNETES.md).
 
 ## Reading Material
 
@@ -31,7 +32,7 @@ The Nebula Graph database consists of four components:
 ![Nebula Architecture](.readme/nebula-architecture.jpg)
 
 The [docker-compose.yml](docker-compose.yml) setup is taken from
-[here](https://github.com/vesoft-inc/nebula-docker-compose/tree/v1.0). 
+[here](https://github.com/vesoft-inc/nebula-docker-compose/tree/v1.0).
 All three services described above are started with three replicas each,
 however the image version was changed from `nightly` to a fixed tag.
 
@@ -82,19 +83,19 @@ In order to use OpenCypher's `MATCH` e.g. like so ...
 MATCH (p:person) -[:like]-> (p2:person) RETURN p, p2
 ```
 
-... nothing is returned. This matches what is described in the [MATCH](https://docs.nebula-graph.io/2.0/3.ngql-guide/7.general-query-statements/2.match/) 
+... nothing is returned. This matches what is described in the [MATCH](https://docs.nebula-graph.io/2.0/3.ngql-guide/7.general-query-statements/2.match/)
 documentation, namely
 
 > The MATCH statement uses a **native index** to locate a source vertex.
 > The vertex can be in any position in a pattern. In other words, in a valid `MATCH` statement, **there must be an indexed property or tag, or a specific VID.**
- 
+
 In addition, here's another nasty one:
 
 > ### OpenCypher compatibility
 >
 > For now, nGQL DOES NOT support scanning all vertices and edges with `MATCH`.
 > For example, `MATCH (v) RETURN v`.
- 
+
 However for our case, we're actually matching using the tag constraint `person`.
 
 Just declaring a tag index like so does appears to create a job only:
@@ -143,7 +144,7 @@ The reason appears to be what's buried in the [Job statements FAQ](https://docs.
 
 > The `SUBMIT JOB` operations use the HTTP port. Please check if the HTTP ports on the machines
 > where the Storage Service is running are working well. You can use the following command to debug.
-> 
+>
 > ```bash
 > curl "http://{storaged-ip}:12000/admin?space={test}&op=compact"
 > ```
