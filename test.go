@@ -43,35 +43,42 @@ func main() {
 			log.Fatal(fmt.Sprintf("Fail to create a new session from connection pool, username: %s, password: %s, %s",
 				username, password, err.Error()))
 		}
+
 		// Release session and return connection back to connection pool
 		defer session.Release()
+
 		// Method used to check execution response
-		checkResultSet := func(prefix string, res *nebula.ResultSet) {
+		checkResultSet := func(prefix string, res *nebula.ResultSet) bool {
 			if !res.IsSucceed() {
-				fmt.Printf("%s, ErrorCode: %v, ErrorMsg: %s", prefix, res.GetErrorCode(), res.GetErrorMsg())
+				fmt.Printf("%s, ErrorCode: %v, ErrorMsg: %s\n", prefix, res.GetErrorCode(), res.GetErrorMsg())
+				return false
 			}
+			return true
 		}
 
-		fmt.Print("Creating the schema ...\n")
+		fmt.Println("Creating the schema ...")
 		{
 			createSchema := "CREATE SPACE IF NOT EXISTS test; " +
 				"USE test;" +
 				"CREATE TAG IF NOT EXISTS person(name string, age int);" +
 				"CREATE EDGE IF NOT EXISTS like(likeness double)"
 
-			// Excute a query
+			// Execute a query
 			resultSet, err := session.Execute(createSchema)
 			if err != nil {
 				fmt.Print(err.Error())
 				return
 			}
-			checkResultSet(createSchema, resultSet)
+
+			if !checkResultSet(createSchema, resultSet) {
+				return
+			}
 		}
 
-		fmt.Print("... sleeping ...\n")
+		fmt.Println("... sleeping ...")
 		time.Sleep(5 * time.Second)
 
-		fmt.Print("Inserting some vertices ...")
+		fmt.Println("Inserting some vertices ...")
 		{
 			insertVertexes := "INSERT VERTEX person(name, age) VALUES " +
 				"'Bob':('Bob', 10), " +
@@ -86,10 +93,13 @@ func main() {
 				fmt.Print(err.Error())
 				return
 			}
-			checkResultSet(insertVertexes, resultSet)
+
+			if !checkResultSet(insertVertexes, resultSet) {
+				return
+			}
 		}
 
-		fmt.Print("Inserting some edges ...\n")
+		fmt.Println("Inserting some edges ...")
 		{
 			// Insert multiple edges
 			insertEdges := "INSERT EDGE like(likeness) VALUES " +
@@ -104,10 +114,13 @@ func main() {
 				fmt.Print(err.Error())
 				return
 			}
-			checkResultSet(insertEdges, resultSet)
+
+			if !checkResultSet(insertEdges, resultSet) {
+				return
+			}
 		}
 
-		fmt.Print("Walking the graph ...\n")
+		fmt.Println("Walking the graph ...")
 		{
 			query := "GO FROM 'Bob' OVER like YIELD $$.person.name, $$.person.age, like.likeness"
 			// Send query
@@ -116,7 +129,10 @@ func main() {
 				fmt.Print(err.Error())
 				return
 			}
-			checkResultSet(query, resultSet)
+
+			if !checkResultSet(query, resultSet) {
+				return
+			}
 
 			// Get all column names from the resultSet
 			colNames := resultSet.GetColNames()
@@ -126,14 +142,18 @@ func main() {
 			record, err := resultSet.GetRowValuesByIndex(0)
 			if err != nil {
 				log.Error(err.Error())
+				return
 			}
+
 			// Print whole row
 			fmt.Printf("row elements: %s\n", record.String())
 			// Get a value in the row by column index
 			valueWrapper, err := record.GetValueByIndex(0)
 			if err != nil {
 				log.Error(err.Error())
+				return
 			}
+
 			// Get type of the value
 			fmt.Printf("valueWrapper type: %s \n", valueWrapper.GetType())
 			// Check if valueWrapper is a string type
@@ -142,6 +162,7 @@ func main() {
 				v1Str, err := valueWrapper.AsString()
 				if err != nil {
 					log.Error(err.Error())
+					return
 				}
 				fmt.Printf("Result of ValueWrapper.AsString(): %s\n", v1Str)
 			}
@@ -151,6 +172,6 @@ func main() {
 	}(&wg)
 	wg.Wait()
 
-	fmt.Print("\n")
+	fmt.Println()
 	log.Info("Example finished")
 }
