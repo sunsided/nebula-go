@@ -19,8 +19,15 @@ image:
     tag: v2.0.0-rc1
     pullPolicy: Always
   # the nebula graph-studio images, change tag to use a different version.
+  # https://github.com/vesoft-inc/nebula-web-docker
   graphstudio:
     repository: vesoft/nebula-graph-studio
+    tag: v2
+    pullPolicy: Always
+  # the nebula graph importer images, change tag to use a different version.
+  # https://github.com/vesoft-inc/nebula-importer
+  importer:
+    repository: vesoft/nebula-importer
     tag: v2
     pullPolicy: Always
   # the nebula http-gateway images, change tag to use a different version.
@@ -88,7 +95,7 @@ resources:
       cpu: 1000m
       memory: 512Mi
     requests:
-      cpu: 1000m
+      cpu: 250m
       memory: 512Mi
 
   httpgateway:
@@ -96,7 +103,15 @@ resources:
       cpu: 1000m
       memory: 512Mi
     requests:
+      cpu: 250m
+      memory: 512Mi
+
+  importer:
+    limits:
       cpu: 1000m
+      memory: 512Mi
+    requests:
+      cpu: 250m
       memory: 512Mi
 
 replication:
@@ -111,12 +126,6 @@ replication:
     replicas: 3
   ## Number of nebula-graph-studio replicas
   graphstudio:
-    replicas: 1
-  ## Number of nginx replicas for nebula-graph-studio
-  nginx:
-    replicas: 1
-  ## Number of http-gateway replicas for nebula-graph-studio
-  httpgateway:
     replicas: 1
 
 port:
@@ -147,11 +156,15 @@ port:
   ## Service And Container Port Setting of Nebula-Graph-Studio's Nginx
   nginx:
     serviceType: ClusterIP
-    httpPort: 7001
+    httpPort: 80
   ## Service And Container Port Setting of Nebula's Http-Gateway
   httpgateway:
     serviceType: ClusterIP
     httpPort: 8080
+  ## Service And Container Port Setting of Nebula's Graph-Importer
+  importer:
+    serviceType: ClusterIP
+    tcpPort: 5699
 
 ## Storage Setting of Nebula-Metad and Nebula-Storaged
 storage:

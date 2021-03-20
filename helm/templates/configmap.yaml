@@ -171,12 +171,14 @@ metadata:
 data:
   nebula.conf: |
     server {
-      listen       {{ .Values.port.graphstudio.httpPort }};
-      server_name nebula-nginx.{{ .Values.namespace }}.svc.cluster.local;
+      listen       {{ .Values.port.nginx.httpPort }};
+      # server_name nebula-graph-studio.{{ .Values.namespace }}.svc.cluster.local;
+      server_name _;
       resolver kube-dns.kube-system.svc.cluster.local ipv6=off;
 
       location / {
-        proxy_pass         http://nebula-graph-studio.{{ .Values.namespace }}.svc.cluster.local:{{ .Values.port.graphstudio.httpPort }};
+        # proxy_pass         http://nebula-graph-studio.{{ .Values.namespace }}.svc.cluster.local:{{ .Values.port.graphstudio.httpPort }};
+        proxy_pass         http://localhost:{{ .Values.port.graphstudio.httpPort }};
         proxy_redirect     off;
         proxy_set_header   Host $host;
         proxy_set_header   X-Real-IP $remote_addr;
@@ -191,10 +193,12 @@ data:
       }
 
       location ~ ^/api-nebula/([A-Za-z0-9\/]+) {
-        proxy_pass http://nebula-http-gateway.{{ .Values.namespace }}.svc.cluster.local:{{ .Values.port.httpgateway.httpPort }}/api/$1;
+        # proxy_pass http://nebula-graph-studio.{{ .Values.namespace }}.svc.cluster.local:{{ .Values.port.httpgateway.httpPort }}/api/$1;
+        proxy_pass http://localhost:{{ .Values.port.httpgateway.httpPort }}/api/$1;
       }
 
-      #location ~ ^/api-import/([A-Za-z0-9\/]+) {
-      #  proxy_pass http://importer:5699/$1;
-      #}
+      location ~ ^/api-import/([A-Za-z0-9\/]+) {
+        # proxy_pass http://nebula-graph-studio.{{ .Values.namespace }}.svc.cluster.local:{{ .Values.port.importer.tcpPort }}/$1;
+        proxy_pass http://localhost:{{ .Values.port.importer.tcpPort }}/$1;
+      }
     }

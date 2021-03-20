@@ -87,8 +87,21 @@ This will spin up the appropriate pods using the default configuration.
 
 ### Port-forwarding
 
-Accessing nebula:
+Accessing Nebula through the client:
 
 ```bash
 kubectl port-forward svc/nebula-graphd 3699
 ```
+
+To access Nebula through Graph Studio, run
+
+```bash
+kubectl port-forward svc/nebula-graphd 7001:80
+```
+
+then open the UI in your browser at [http://localhost:7001](http://localhost:7001/?lang=EN_US) 
+and use the following configuration to log in:
+
+- Host: `nebula-graphd:3699`
+- User: `user` (literally)
+- Password: `password` (literally)
