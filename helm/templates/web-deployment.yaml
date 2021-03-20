@@ -1,0 +1,163 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nebula-graph-studio
+  name: nebula-graph-studio
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: nebula-graph-studio
+  replicas: {{ .Values.replication.graphstudio.replicas }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: nebula-graph-studio
+    spec:
+      restartPolicy: Always
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+      containers:
+      - name: nebula-graphd
+        image: "{{ .Values.image.graphstudio.repository }}:{{ .Values.image.graphstudio.tag }}"
+        imagePullPolicy: {{ .Values.image.graphstudio.pullPolicy }}
+        env:
+          - name: USER
+            value: root
+        resources:
+          requests:
+            cpu: {{ .Values.resources.graphstudio.requests.cpu | quote }}
+            memory: {{ .Values.resources.graphstudio.requests.memory | quote }}
+          limits:
+            cpu: {{ .Values.resources.graphstudio.limits.cpu | quote }}
+            memory: {{ .Values.resources.graphstudio.limits.memory | quote }}
+        ports:
+        - name: http-web
+          containerPort: {{ .Values.port.graphstudio.httpPort }}
+        {{- if .Values.livenessProbe.graphstudio.Enable }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.port.graphstudio.httpPort }}
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nebula-http-gateway
+  name: nebula-http-gateway
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: nebula-http-gateway
+  replicas: {{ .Values.replication.httpgateway.replicas }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: nebula-http-gateway
+    spec:
+      restartPolicy: Always
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+      {{ toYaml .Values.nodeSelector | indent 8 }}
+      {{- end }}
+      containers:
+      - name: nebula-graphd
+        image: "{{ .Values.image.httpgateway.repository }}:{{ .Values.image.httpgateway.tag }}"
+        imagePullPolicy: {{ .Values.image.httpgateway.pullPolicy }}
+        env:
+        - name: USER
+          value: root
+        resources:
+          requests:
+            cpu: {{ .Values.resources.httpgateway.requests.cpu | quote }}
+            memory: {{ .Values.resources.httpgateway.requests.memory | quote }}
+          limits:
+            cpu: {{ .Values.resources.httpgateway.limits.cpu | quote }}
+            memory: {{ .Values.resources.httpgateway.limits.memory | quote }}
+        ports:
+          - name: http
+            containerPort: {{ .Values.port.httpgateway.httpPort }}
+        {{- if .Values.livenessProbe.httpgateway.Enable }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.port.httpgateway.httpPort }}
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nebula-graph-studio-nginx
+  name: nebula-graph-studio-nginx
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: nebula-graph-studio-nginx
+  replicas: {{ .Values.replication.nginx.replicas }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: nebula-graph-studio-nginx
+    spec:
+      restartPolicy: Always
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+      {{ toYaml .Values.nodeSelector | indent 8 }}
+      {{- end }}
+      containers:
+      - name: nebula-graphd
+        image: "{{ .Values.image.nginx.repository }}:{{ .Values.image.nginx.tag }}"
+        imagePullPolicy: {{ .Values.image.nginx.pullPolicy }}
+        resources:
+          requests:
+            cpu: {{ .Values.resources.nginx.requests.cpu | quote }}
+            memory: {{ .Values.resources.nginx.requests.memory | quote }}
+          limits:
+            cpu: {{ .Values.resources.nginx.limits.cpu | quote }}
+            memory: {{ .Values.resources.nginx.limits.memory | quote }}
+        ports:
+          - name: http
+            containerPort: {{ .Values.port.nginx.httpPort }}
+        {{- if .Values.livenessProbe.nginx.Enable }}
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.port.nginx.httpPort }}
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        {{- end }}
+        volumeMounts:
+        - name: config
+          subPath: nebula.conf
+          mountPath: /etc/nginx/conf.d/nebula.conf
+      volumes:
+        - name: config
+          configMap:
+            name: nebula-graph-studio-nginx
