@@ -83,4 +83,12 @@ helm install nebula helm/ --set=storage.storageClass=standard --set=nodeSelector
 helm list
 ```
 
-This will spin up the appropriate pods using the default configuration
+This will spin up the appropriate pods using the default configuration.
+
+### Port-forwarding
+
+Accessing nebula:
+
+```bash
+kubectl port-forward svc/nebula-graphd 3699
+```
