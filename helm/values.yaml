@@ -95,7 +95,7 @@ resources:
       cpu: 1000m
       memory: 512Mi
     requests:
-      cpu: 1000m
+      cpu: 250m
       memory: 512Mi
 
   httpgateway:
@@ -103,7 +103,7 @@ resources:
       cpu: 1000m
       memory: 512Mi
     requests:
-      cpu: 1000m
+      cpu: 250m
       memory: 512Mi
 
   importer:
@@ -111,7 +111,7 @@ resources:
       cpu: 1000m
       memory: 512Mi
     requests:
-      cpu: 1000m
+      cpu: 250m
       memory: 512Mi
 
 replication:
@@ -126,15 +126,6 @@ replication:
     replicas: 3
   ## Number of nebula-graph-studio replicas
   graphstudio:
-    replicas: 1
-  ## Number of nginx replicas for nebula-graph-studio
-  nginx:
-    replicas: 1
-  ## Number of http-gateway replicas for nebula-graph-studio
-  httpgateway:
-    replicas: 1
-  ## Number of graph-importer replicas for nebula-graph-studio
-  importer:
     replicas: 1
 
 port:
@@ -165,7 +156,7 @@ port:
   ## Service And Container Port Setting of Nebula-Graph-Studio's Nginx
   nginx:
     serviceType: ClusterIP
-    httpPort: 7001
+    httpPort: 80
   ## Service And Container Port Setting of Nebula's Http-Gateway
   httpgateway:
     serviceType: ClusterIP

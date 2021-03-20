@@ -26,7 +26,7 @@ spec:
 {{ toYaml .Values.nodeSelector | indent 8 }}
 {{- end }}
       containers:
-      - name: nebula-graphd
+      - name: graph-studio
         image: "{{ .Values.image.graphstudio.repository }}:{{ .Values.image.graphstudio.tag }}"
         imagePullPolicy: {{ .Values.image.graphstudio.pullPolicy }}
         env:
@@ -40,7 +40,7 @@ spec:
             cpu: {{ .Values.resources.graphstudio.limits.cpu | quote }}
             memory: {{ .Values.resources.graphstudio.limits.memory | quote }}
         ports:
-        - name: http-web
+        - name: http-studio
           containerPort: {{ .Values.port.graphstudio.httpPort }}
         {{- if .Values.livenessProbe.graphstudio.Enable }}
         livenessProbe:
@@ -50,36 +50,27 @@ spec:
           initialDelaySeconds: 30
           timeoutSeconds: 5
         {{- end }}
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: nebula-http-gateway
-  name: nebula-http-gateway
-  namespace: {{ .Values.namespace }}
-spec:
-  selector:
-    matchLabels:
-      app: nebula-http-gateway
-  replicas: {{ .Values.replication.httpgateway.replicas }}
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        app: nebula-http-gateway
-    spec:
-      restartPolicy: Always
-      {{- if .Values.nodeSelector }}
-      nodeSelector:
-      {{ toYaml .Values.nodeSelector | indent 8 }}
-      {{- end }}
-      containers:
-      - name: nebula-graphd
+      - name: importer
+        image: "{{ .Values.image.importer.repository }}:{{ .Values.image.importer.tag }}"
+        imagePullPolicy: {{ .Values.image.importer.pullPolicy }}
+        env:
+          - name: USER
+            value: root
+        command:
+          - "/bin/sh"
+          - "-ecx"
+          - "exec /usr/local/bin/nebula-importer --port={{ .Values.port.importer.tcpPort }} --callback=http://nginx:{{ .Values.port.nginx.httpPort }}/api/import/finish "
+        resources:
+          requests:
+            cpu: {{ .Values.resources.importer.requests.cpu | quote }}
+            memory: {{ .Values.resources.importer.requests.memory | quote }}
+          limits:
+            cpu: {{ .Values.resources.importer.limits.cpu | quote }}
+            memory: {{ .Values.resources.importer.limits.memory | quote }}
+        ports:
+          - name: tcp-importer
+            containerPort: {{ .Values.port.importer.tcpPort }}
+      - name: http-gateway
         image: "{{ .Values.image.httpgateway.repository }}:{{ .Values.image.httpgateway.tag }}"
         imagePullPolicy: {{ .Values.image.httpgateway.pullPolicy }}
         env:
@@ -93,7 +84,7 @@ spec:
             cpu: {{ .Values.resources.httpgateway.limits.cpu | quote }}
             memory: {{ .Values.resources.httpgateway.limits.memory | quote }}
         ports:
-          - name: http
+          - name: http-gateway
             containerPort: {{ .Values.port.httpgateway.httpPort }}
         {{- if .Values.livenessProbe.httpgateway.Enable }}
         livenessProbe:
@@ -103,36 +94,7 @@ spec:
           initialDelaySeconds: 30
           timeoutSeconds: 5
         {{- end }}
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: nebula-graph-studio-nginx
-  name: nebula-graph-studio-nginx
-  namespace: {{ .Values.namespace }}
-spec:
-  selector:
-    matchLabels:
-      app: nebula-graph-studio-nginx
-  replicas: {{ .Values.replication.nginx.replicas }}
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        app: nebula-graph-studio-nginx
-    spec:
-      restartPolicy: Always
-      {{- if .Values.nodeSelector }}
-      nodeSelector:
-      {{ toYaml .Values.nodeSelector | indent 8 }}
-      {{- end }}
-      containers:
-      - name: nebula-graphd
+      - name: nginx
         image: "{{ .Values.image.nginx.repository }}:{{ .Values.image.nginx.tag }}"
         imagePullPolicy: {{ .Values.image.nginx.pullPolicy }}
         resources:
@@ -143,7 +105,7 @@ spec:
             cpu: {{ .Values.resources.nginx.limits.cpu | quote }}
             memory: {{ .Values.resources.nginx.limits.memory | quote }}
         ports:
-          - name: http
+          - name: http-nginx
             containerPort: {{ .Values.port.nginx.httpPort }}
         {{- if .Values.livenessProbe.nginx.Enable }}
         livenessProbe:
@@ -156,57 +118,9 @@ spec:
         volumeMounts:
         - name: config
           subPath: nebula.conf
-          mountPath: /etc/nginx/conf.d/nebula.conf
+          mountPath: /etc/nginx/conf.d/default.conf
       volumes:
         - name: config
           configMap:
             name: nebula-graph-studio-nginx
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: nebula-graph-importer
-  name: nebula-graph-importer
-  namespace: {{ .Values.namespace }}
-spec:
-  selector:
-    matchLabels:
-      app: nebula-graph-importer
-  replicas: {{ .Values.replication.importer.replicas }}
-  strategy:
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        app: nebula-graph-importer
-    spec:
-      restartPolicy: Always
-      {{- if .Values.nodeSelector }}
-      nodeSelector:
-      {{ toYaml .Values.nodeSelector | indent 8 }}
-      {{- end }}
-      containers:
-      - name: nebula-graphd
-        image: "{{ .Values.image.importer.repository }}:{{ .Values.image.importer.tag }}"
-        imagePullPolicy: {{ .Values.image.importer.pullPolicy }}
-        env:
-          - name: USER
-            value: root
-        command:
-          - "/bin/sh"
-          - "-ecx"
-          - "exec /usr/local/bin/nebula-importer --port={{ .Values.port.importer.tcpPort }} --callback=http://nebula-nginx.{{ .Values.namespace }}.svc.cluster.local:{{ .Values.port.nginx.httpPort }}/api/import/finish "
-        resources:
-          requests:
-            cpu: {{ .Values.resources.importer.requests.cpu | quote }}
-            memory: {{ .Values.resources.importer.requests.memory | quote }}
-          limits:
-            cpu: {{ .Values.resources.importer.limits.cpu | quote }}
-            memory: {{ .Values.resources.importer.limits.memory | quote }}
-        ports:
-          - name: tcp
-            containerPort: {{ .Values.port.importer.tcpPort }}

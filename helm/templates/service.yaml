@@ -97,56 +97,13 @@ spec:
   publishNotReadyAddresses: true
   type: NodePort
   ports:
-    - name: http-web
-      port: {{ .Values.port.graphstudio.httpPort }}
-  selector:
-    app: nebula-graph-studio
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: nebula-nginx
-  name: nebula-nginx
-  namespace: {{ .Values.namespace }}
-spec:
-  publishNotReadyAddresses: true
-  type: NodePort
-  ports:
     - name: http-nginx
       port: {{ .Values.port.nginx.httpPort }}
-  selector:
-    app: nebula-graph-studio-nginx
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: nebula-http-gateway
-  name: nebula-http-gateway
-  namespace: {{ .Values.namespace }}
-spec:
-  publishNotReadyAddresses: true
-  type: NodePort
-  ports:
+    - name: http-studio
+      port: {{ .Values.port.graphstudio.httpPort }}
     - name: http-gateway
       port: {{ .Values.port.httpgateway.httpPort }}
-  selector:
-    app: nebula-http-gateway
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: nebula-graph-importer
-  name: nebula-graph-importer
-  namespace: {{ .Values.namespace }}
-spec:
-  publishNotReadyAddresses: true
-  type: NodePort
-  ports:
-    - name: tcp
+    - name: tcp-importer
       port: {{ .Values.port.importer.tcpPort }}
   selector:
-    app: nebula-graph-importer
----
+    app: nebula-graph-studio
