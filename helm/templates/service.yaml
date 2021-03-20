@@ -99,11 +99,11 @@ spec:
   ports:
     - name: http-nginx
       port: {{ .Values.port.nginx.httpPort }}
-    - name: http-studio
-      port: {{ .Values.port.graphstudio.httpPort }}
-    - name: http-gateway
-      port: {{ .Values.port.httpgateway.httpPort }}
-    - name: tcp-importer
-      port: {{ .Values.port.importer.tcpPort }}
+    # - name: http-studio
+    #   port: {{ .Values.port.graphstudio.httpPort }}
+    # - name: http-gateway
+    #   port: {{ .Values.port.httpgateway.httpPort }}
+    # - name: tcp-importer
+    #   port: {{ .Values.port.importer.tcpPort }}
   selector:
     app: nebula-graph-studio

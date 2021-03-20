@@ -32,6 +32,8 @@ spec:
         env:
           - name: USER
             value: root
+          - name: UPLOAD_DIR
+            value: /uploads
         resources:
           requests:
             cpu: {{ .Values.resources.graphstudio.requests.cpu | quote }}
@@ -50,6 +52,9 @@ spec:
           initialDelaySeconds: 30
           timeoutSeconds: 5
         {{- end }}
+        volumeMounts:
+        - name: import-upload
+          mountPath: /uploads
       - name: importer
         image: "{{ .Values.image.importer.repository }}:{{ .Values.image.importer.tag }}"
         imagePullPolicy: {{ .Values.image.importer.pullPolicy }}
@@ -70,6 +75,9 @@ spec:
         ports:
           - name: tcp-importer
             containerPort: {{ .Values.port.importer.tcpPort }}
+        volumeMounts:
+        - name: import-upload
+          mountPath: /uploads
       - name: http-gateway
         image: "{{ .Values.image.httpgateway.repository }}:{{ .Values.image.httpgateway.tag }}"
         imagePullPolicy: {{ .Values.image.httpgateway.pullPolicy }}
@@ -119,8 +127,12 @@ spec:
         - name: config
           subPath: nebula.conf
           mountPath: /etc/nginx/conf.d/default.conf
+        - name: import-upload
+          mountPath: /uploads
       volumes:
-        - name: config
-          configMap:
-            name: nebula-graph-studio-nginx
+      - name: import-upload
+        emptyDir: {}
+      - name: config
+        configMap:
+          name: nebula-graph-studio-nginx
 ---
