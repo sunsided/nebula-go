@@ -1,8 +1,10 @@
 # Nebula Graph Kubernetes Deployment
 
-Please find the information in [How to Deploy Nebula Graph on Kubernetes](https://nebula-graph.io/posts/how-to-deploy-nebula-graph-in-kubernetes/).
+The basis for the Kubernetes deployment is the article [How to Deploy Nebula Graph on Kubernetes](https://nebula-graph.io/posts/how-to-deploy-nebula-graph-in-kubernetes/).
+The original Helm chart is taken from the official repository [vesoft-inc/nebula/kubernetes/helm](https://github.com/vesoft-inc/nebula/tree/master/kubernetes/helm)
+and was adjusted from there.
 
-The Helm chart is taken from the official repository [vesoft-inc/nebula/kubernetes/helm](https://github.com/vesoft-inc/nebula/tree/master/kubernetes/helm).
+Note that there is a Kubernetes Operator described in [Nebula Operator: Automated the Nebula Graph Cluster Deployment and Maintenance on K8s](https://medium.com/nebula-graph/nebula-operator-automated-the-nebula-graph-cluster-deployment-and-maintenance-on-k8s-2730987b8c42).
 
 ## Deploy
 

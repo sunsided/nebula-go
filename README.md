@@ -8,6 +8,7 @@ The client example is adjusted from [here](https://github.com/vesoft-inc/nebula-
 ## Reading Material
 
 - [Nebula Graph v2.0.0 rc1 Release Note](https://discuss.nebula-graph.io/t/nebula-graph-v2-0-0-rc1-release-note/832) (January 6th, 2021)
+- [Third time is the charm for Nebula Graph database](https://www.nextplatform.com/2021/01/19/third-time-is-the-charm-for-nebula-graph-database/)
 
 ## Local Setup
 
