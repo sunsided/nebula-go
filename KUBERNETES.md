@@ -65,6 +65,7 @@ kubectl config use-context kind-nebula
 # helm install nebula helm/ # WARNING! You'll need to add options to apply your configuration!
 helm install nebula helm/ --set=storage.storageClass=standard --set=nodeSelector=null --dry-run
 
+# If it worked, redo the above command without "--dry-run". To list all installations, run
 helm list
 ```
 
