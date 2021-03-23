@@ -30,11 +30,14 @@ func main() {
 	if err != nil {
 		log.Fatal(fmt.Sprintf("Fail to initialize the connection pool, host: %s, port: %d, %s", address, port, err.Error()))
 	}
+
 	// Close all connections in the pool
 	defer pool.Close()
+
 	// Create session and send query in go routine
 	var wg sync.WaitGroup
 	wg.Add(1)
+
 	go func(wg *sync.WaitGroup) {
 		defer wg.Done()
 		// Create session
@@ -42,6 +45,7 @@ func main() {
 		if err != nil {
 			log.Fatal(fmt.Sprintf("Fail to create a new session from connection pool, username: %s, password: %s, %s",
 				username, password, err.Error()))
+			return
 		}
 
 		// Release session and return connection back to connection pool
@@ -50,7 +54,7 @@ func main() {
 		// Method used to check execution response
 		checkResultSet := func(prefix string, res *nebula.ResultSet) bool {
 			if !res.IsSucceed() {
-				fmt.Printf("%s, ErrorCode: %v, ErrorMsg: %s\n", prefix, res.GetErrorCode(), res.GetErrorMsg())
+				log.Error(fmt.Sprintf("%s, ErrorCode: %v, ErrorMsg: %s\n", prefix, res.GetErrorCode(), res.GetErrorMsg()))
 				return false
 			}
 			return true
@@ -66,7 +70,7 @@ func main() {
 			// Execute a query
 			resultSet, err := session.Execute(createSchema)
 			if err != nil {
-				fmt.Print(err.Error())
+				log.Error(err.Error())
 				return
 			}
 
@@ -90,7 +94,7 @@ func main() {
 			// Insert multiple vertexes
 			resultSet, err := session.Execute(insertVertexes)
 			if err != nil {
-				fmt.Print(err.Error())
+				log.Error(err.Error())
 				return
 			}
 
@@ -111,7 +115,7 @@ func main() {
 
 			resultSet, err := session.Execute(insertEdges)
 			if err != nil {
-				fmt.Print(err.Error())
+				log.Error(err.Error())
 				return
 			}
 
@@ -126,7 +130,7 @@ func main() {
 			// Send query
 			resultSet, err := session.Execute(query)
 			if err != nil {
-				fmt.Print(err.Error())
+				log.Error(err.Error())
 				return
 			}
 
