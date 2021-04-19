@@ -1,6 +1,6 @@
 # Go feat. Nebula Graph
 
-This project uses the Nebula Go driver to interface with Nebula Graph 1.0.
+This project is an experiment for using the Nebula Go driver to interface with Nebula Graph 2.0.
 The client example is adjusted from [here](https://github.com/vesoft-inc/nebula-go/blob/master/example/graph_client_example.go).
 
 👉 For an example of how to run Nebula Graph in Kubernetes, see [KUBERNETES.md](KUBERNETES.md).
