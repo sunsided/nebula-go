@@ -5,7 +5,7 @@ services:
   # Metadata Service
 
   metad0:
-    image: vesoft/nebula-metad:v2.0.0-rc1
+    image: vesoft/nebula-metad:v2.0.1
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -39,7 +39,7 @@ services:
       - SYS_PTRACE
 
   metad1:
-    image: vesoft/nebula-metad:v2.0.0-rc1
+    image: vesoft/nebula-metad:v2.0.1
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -73,7 +73,7 @@ services:
       - SYS_PTRACE
 
   metad2:
-    image: vesoft/nebula-metad:v2.0.0-rc1
+    image: vesoft/nebula-metad:v2.0.1
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -110,7 +110,7 @@ services:
   # Storage Service
 
   storaged0:
-    image: vesoft/nebula-storaged:v2.0.0-rc1
+    image: vesoft/nebula-storaged:v2.0.1
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -148,7 +148,7 @@ services:
       - SYS_PTRACE
 
   storaged1:
-    image: vesoft/nebula-storaged:v2.0.0-rc1
+    image: vesoft/nebula-storaged:v2.0.1
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -186,7 +186,7 @@ services:
       - SYS_PTRACE
 
   storaged2:
-    image: vesoft/nebula-storaged:v2.0.0-rc1
+    image: vesoft/nebula-storaged:v2.0.1
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -227,7 +227,7 @@ services:
   # Query Service
 
   graphd0:
-    image: vesoft/nebula-graphd:v2.0.0-rc1
+    image: vesoft/nebula-graphd:v2.0.1
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -262,7 +262,7 @@ services:
       - SYS_PTRACE
 
   graphd1:
-    image: vesoft/nebula-graphd:v2.0.0-rc1
+    image: vesoft/nebula-graphd:v2.0.1
     environment:
       USER: root
       TZ:   "${TZ}"
@@ -297,7 +297,7 @@ services:
       - SYS_PTRACE
 
   graphd2:
-    image: vesoft/nebula-graphd:v2.0.0-rc1
+    image: vesoft/nebula-graphd:v2.0.1
     environment:
       USER: root
       TZ:   "${TZ}"

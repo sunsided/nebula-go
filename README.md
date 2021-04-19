@@ -7,15 +7,20 @@ The client example is adjusted from [here](https://github.com/vesoft-inc/nebula-
 
 ## Reading Material
 
-- [Nebula Graph v2.0.0 rc1 Release Note](https://discuss.nebula-graph.io/t/nebula-graph-v2-0-0-rc1-release-note/832) (January 6th, 2021)
+- [Nebula Graph v2.0 GA Overview](https://nebula-graph.io/posts/nebula-graph-v2.0-ga-overview/)
+- [Nebula Graph v2.0 GA Release Notes](https://nebula-graph.io/posts/nebula-graph-v2.0-ga-release-note/)
 - [Third time is the charm for Nebula Graph database](https://www.nextplatform.com/2021/01/19/third-time-is-the-charm-for-nebula-graph-database/)
+
+### Noteworthy repos
+
+- [github.com/vesoft-inc/nebula-python](https://github.com/vesoft-inc/nebula-python)
 
 ## Local Setup
 
 To start Nebula, run
 
-```bash
-docker-compose up
+```console
+$ docker-compose up
 ```
 
 Note that this setup uses Docker network `172.29.0.0/16`.
@@ -57,8 +62,8 @@ Note that you _must_ use the IP of your host machine. Using either
 
 To open the console, run
 
-```bash
-docker run --rm -ti --network nebula-go_nebula-net vesoft/nebula-console:v2 -u user -p password --address=graphd1 --port=3699
+```console
+$ docker run --rm -ti --network nebula-go_nebula-net vesoft/nebula-console:v2 -u user -p password --address=graphd1 --port=3699
 ```
 
 ### Example queries
@@ -146,8 +151,8 @@ The reason appears to be what's buried in the [Job statements FAQ](https://docs.
 > The `SUBMIT JOB` operations use the HTTP port. Please check if the HTTP ports on the machines
 > where the Storage Service is running are working well. You can use the following command to debug.
 >
-> ```bash
-> curl "http://{storaged-ip}:12000/admin?space={test}&op=compact"
+> ```console
+> $ curl "http://{storaged-ip}:12000/admin?space={test}&op=compact"
 > ```
 
 Now this is similar to what the health checks in the Docker Compose file are doing, however as of
@@ -155,8 +160,8 @@ now, all of them show `Up 4 minutes (unhealthy)`.
 
 Exec'ing into e.g. the graphd0 container
 
-```bash
-docker-compose exec graphd0 bash
+```console
+$ docker-compose exec graphd0 bash
 ```
 
 However, `curl http://storaged0:12000` gives
